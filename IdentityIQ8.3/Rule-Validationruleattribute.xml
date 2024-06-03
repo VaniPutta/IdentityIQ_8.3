@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ValidationRuleAttribute">
+          
+    
+    <Source><![CDATA[
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import java.util.List;
+  //import sailpoint.api.SailPointFactory;
+  import sailpoint.object.Link;
+
+  // SailPointContext context = SailPointFactory.getCurrentContext();
+  //log.error("context-----"+context);
+
+  // Create QueryOptions objects for each application
+  QueryOptions adsource = new QueryOptions();
+  log.error("adsource-----"+adsource);
+  QueryOptions adtarget = new QueryOptions();
+  log.error("adtarget-----"+adtarget);
+  // Define filters for each application
+  Filter adsourceapplication = Filter.eq("links.application.name", "HR Source Application");
+  System.out.println("hrAppFilter-------------"+hrAppFilter);
+  Filter adtargetapplication = Filter.eq("links.application.name", "AD Target Application");
+
+  // Add filters to respective QueryOptions
+  adsource.addFilter(adsourceapplication);
+  adtarget.addFilter(adtargetapplication);
+
+  // Retrieve identities linked to each application
+  List adsourceapplicationidentities = context.getObjects(Identity.class, adsource);
+  System.out.println("adsourceapplicationidentities: " + adsourceapplicationidentities);
+
+  for (Identity identity : adsourceapplicationidentities) {
+    System.out.println("Identity: " + identity.getName());
+  }
+
+
+  List adtargetapplicationidentities = context.getObjects(Identity.class, adtarget);
+  System.out.println("adtargetapplicationidentities: " + adtargetapplicationidentities);
+  // Find the intersection of the two identity sets
+  adsourceapplicationidentities.retainAll(adtargetapplicationidentities);
+
+  List identities=context.getObjects(identity.class);
+List applications=context.getObjects(application.class);
+  
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>
