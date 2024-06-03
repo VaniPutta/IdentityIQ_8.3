@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ValidationRule">
+          
+    
+    <Source><![CDATA[
+
+
+  import sailpoint.object.Identity;
+  import java.util.List;
+  import java.util.ArrayList;
+
+  List linksList = new ArrayList();
+
+  List identities = context.getObjects(Identity.class);
+
+  for (Identity identity : identities) {
+    String iden = identity.getName(); // corrected method name
+    log.error("iden" + iden);
+
+    List links = identity.getLinks();
+    return links.size();
+
+    //log.error(links.toXml());
+    linksList.addAll(links); // Store links for each identity
+
+  }
+
+  return linksList.size(); // Return the aggregated list of links
+
+
+
+  /*
+  import sailpoint.object.Identity;
+
+
+  List identities=context.getObjects(Identity.class);
+
+  for(Identity identity:identities){
+
+    String iden=identity.getNmae();
+    log.error("iden"+iden);
+
+   List links=identity.getLinks();
+    log.error(links.toXml());
+    return links;
+
+
+  }
+
+
+  return identities;
+
+
+
+
+
+ /* 
+  import sailpoint.object.Custom;
+
+      Custom customObj=context.getObjectByName(Custom.class,"custom_config");
+   return customObj.get("Auto_Remiders");
+
+
+
+
+
+
+
+
+ /* 
+    import sailpoint.object.*;  
+  import sailpoint.api.*; 
+  WorkflowLaunch wfl = new WorkflowLaunch();
+  Workflow wf = context.getObjectByName(Workflow.class,"TestingWorkflow");
+  log.error(wf.toXml());
+  if(wf != null){    
+  wfl.setWorkflowName(wf.getName());  
+  wfl.setWorkflowRef(wf.getName());
+  Workflower flower = new Workflower(context);  
+  WorkflowLaunch launch = flower.launch(wfl);
+    log.error(launch.toXml());
+  }
+
+  /*
+  =====================Workflow Trigger by Workflow Launcher====================
+
+
+    =====================Workflow Trigger by Workflow Launcher====================
+
+
+
+
+
+  /*
+
+  import sailpoint.object.*;
+  import java.util.*;
+
+  Application application=context.getObjectByName(Application.class,"AD Target Application");
+  //log.error("application--------"+application.toXml());
+    log.error("applicationAttributes----------"+application.getAttributes().get("domainSettings").get(0).get("domainDN"));
+String domainname=application.getAttributes().get("domainSettings").get(0).get("domainDN");
+  log.error("domainname---------------"+domainname);
+//return domainname;
+  String domainname2=+"+domainname+"+;
+  log.error("domainname2------------"+domainname2);
+  String domainname1 = domainname.split("DC=");
+  log.error("domainname1--------------"+domainname1);
+
+  //domainname---------------DC=ESHIAM,DC=com
+
+  //String converteddomainnamearray = Arrays.toString(domainnamearray);
+  log.error("converteddomainnamearray-----------"+converteddomainnamearray);
+  String a=converteddomainnamearray.get[1];
+  log.error("a----"+a);
+
+  /*
+  log.error("applicationAttributes----------"+application.getAttributes().get("forestSettings").get(0).get("forestName"));
+  log.error("applicationAttributes----------"+application.getAttributes().get("domainSettings").get(0).get("forestName"));
+   log.error("applicationAttributes----------"+application.getAttributes().get("group.searchDNs").get(0).get("searchDN"));
+
+  //String dn = application.getAttributes().get("group.searchDNs").get(0).get("searchDN");
+
+  //log.error("dn---"+dn);
+
+  //String formattedString = formatDN(dn);
+       // System.out.println("formattedString----"+formattedString);
+
+
+       import sailpoint.object.*;
+
+  Application application=context.getObjectByName(Application.class,"AD Target Application");
+  //log.error("application--------"+application.toXml());
+
+  log.error("applicationAttributes----------"+application.getAttributes().get("domainSettings").get(0).get("domainDN"));
+String domainname=application.getAttributes().get("domainSettings").get(0).get("domainDN")
+return domainname;
+String[] components = domainname.split(",DC=");
+
+
+  String dn = "OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+        //String formattedString = formatDN(dn);
+        //System.out.println(formattedString); // Output: Groups/Eshiam.com
+
+        // Split the DN into its components
+        String[] components = dn.split(",DC=");
+  String convertedString = Arrays.toString(components);
+  log.error("convertedString----------------"+convertedString);
+  String a2=components[3];
+   log.error("a2----"+a2);
+  String a1=convertedString[2];
+log.error("a1----"+a1);
+  String a2=convertedString.get[3];
+   log.error("a2----"+a2);
+
+  String a=a1+"."+a2;
+  log.error("a----"+a);
+ // convertedString----------------[OU=Groups,OU=Demo, Eshiam, com]
+ //convertedString1----------------[, Groups,, Demo,DC=Eshiam,DC=com]
+
+  /*
+
+  String[] components1=dn.split("OU=");
+  String convertedString1 = Arrays.toString(components1);
+ log.error("convertedString1----------------"+convertedString1);
+
+ //  log.error("components-------"+components);
+ // log.error("components1-------"+components1);
+
+
+
+
+
+
+
+  // Extract the relevant components and format them
+
+
+
+
+  String groupName = components[0].substring(3);
+  groupName-------Groups,OU=Demo
+  String groupName = components1[0].substring(3);// Remove "OU="
+  log.error("groupName-------"+groupName);
+        String domainName = components[components.length - 1];
+  formattedString------Groups,OU=Demo/
+  log.error("domainName-------"+domainName);
+        domainName = domainName.replace(",",".").substring(3); // Remove "DC=" and replace "," with "."
+
+        // Combine the formatted components
+        String formattedString = groupName + "/" + domainName;
+  log.error("formattedString------"+formattedString);
+       // return formattedString;
+
+
+
+  /*  //working link termination rule
+  import sailpoint.object.*;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Application;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+
+ Terminator terminator=new Terminator(context);
+  System.out.println("terminator------"+terminator);
+  Filter filter=Filter.eq("application.name","Americana Application");
+  System.out.println("filter------"+filter);
+  QueryOptions queryoptions=new QueryOptions();
+  System.out.println("queryoptions------"+queryoptions);
+  queryoptions.add(filter);
+  terminator.deleteObjects(ManagedAttribute.class,queryoptions);
+
+
+
+
+  /*
+
+
+  //working link termination rule
+  import sailpoint.object.*;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Application;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+
+ Terminator terminator=new Terminator(context);
+  Filter filter=Filter.eq("application.name","JDBC Application");
+  QueryOptions queryoptions=new QueryOptions();
+  queryoptions.add(filter);
+  terminator.deleteObjects(Link.class,queryoptions);
+
+
+  /*
+
+   import sailpoint.object.QueryOptions;
+import sailpoint.object.Filter;
+import sailpoint.object.ManagedAttribute;
+import sailpoint.api.Terminator;
+
+QueryOptions queryOptions = new QueryOptions();
+  System.out.println("queryOptions------------"+queryOptions);
+queryOptions.addFilter(Filter.eq("application.name","Americana Application"));
+Terminator terminator = new Terminator(context);
+  System.out.println("terminator------------"+terminator);
+Iterator itr = context.search(ManagedAttribute.class ,queryOptions, "id");
+  System.out.println("itr------------"+itr);
+
+if (itr.hasNext()) {
+    Object obj = itr.next();
+  System.out.println("obj------------"+obj.get[0]);
+    if (obj instanceof String) { // Assuming the ID is of type String
+        String objectId = (String) obj;
+      System.out.println("objectId------------"+objectId);
+        managedAttribute = context.getObjectById(ManagedAttribute.class, objectId);
+    }
+}
+
+if (managedAttribute != null) {
+    terminator.deleteObject(managedAttribute);
+} else {
+    System.out.println("Managed attribute not found.");
+}
+
+
+  ManagedAttribute managedAttribute = context.getObjectById(ManagedAttribute.class,itr);
+  System.out.println("managedAttribute------------"+managedAttribute);
+    terminator.deleteObject(managedAttribute);
+
+
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+
+
+  Filter filter = Filter.collectionCondition("links",Filter.and(Filter.eq("application.name","AD Source Application"),Filter.eq("application.name","AD Target Application")));
+
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(filter);
+  //return context.countObjects(Identity.class, qo),context.getObjects(Identity.class, qo);
+  //return context.getObjects(Identity.class, qo);
+
+  Identity id=context.getObjectByName(Identity.class,"Anna Ward");
+  System.out.println("id------------"+id);
+  List gridstate=id.getGridStates();
+  System.out.println("gridstate----------"+gridstate);
+
+
+  /*
+  ==========================================
+//Working
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import java.util.List;
+  import sailpoint.api.SailPointFactory;
+
+
+  SailPointContext context = SailPointFactory.getCurrentContext();
+
+  // Create QueryOptions objects for each application
+  QueryOptions hrAppQo = new QueryOptions();
+  QueryOptions adAppQo = new QueryOptions();
+
+  // Define filters for each application
+  Filter hrAppFilter = Filter.eq("links.application.name", "LDAP Application");
+  System.out.println("hrAppFilter-------------"+hrAppFilter);
+  Filter adAppFilter = Filter.eq("links.application.name", "AD Target Application");
+
+  // Add filters to respective QueryOptions
+  hrAppQo.addFilter(hrAppFilter);
+  adAppQo.addFilter(adAppFilter);
+
+  // Retrieve identities linked to each application
+  List hrAppIdentities = context.getObjects(Identity.class, hrAppQo);
+  System.out.println("hrAppIdentities: " + hrAppIdentities);
+  List adAppIdentities = context.getObjects(Identity.class, adAppQo);
+  System.out.println("adAppIdentities: " + adAppIdentities);
+  // Find the intersection of the two identity sets
+  hrAppIdentities.retainAll(adAppIdentities);
+
+  // Print the retrieved identities
+  for (Identity identity : hrAppIdentities) {
+    System.out.println("Identity: " + identity.getName());
+  }
+
+  return hrAppIdentities;
+
+
+
+
+  /*==================================================
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import java.util.List;
+
+    QueryOptions qo = new QueryOptions();
+
+    System.out.println("QueryOptions: \n" + qo);
+
+
+    Filter hrAppFilter = Filter.eq("links.application.name", "AD Source Application");
+    System.out.println("AD Source Application: \n" + hrAppFilter);
+
+    Filter adAppFilter = Filter.eq("links.application.name", "AD Target Application");
+    System.out.println("AD Target Application: " + adAppFilter);
+
+
+    Filter twoAppFilter = Filter.and(hrAppFilter, adAppFilter);
+    System.out.println("Combined Filter: " + twoAppFilter);
+
+
+    qo.addFilter(twoAppFilter);
+
+    System.out.println("After QueryOptions: " + qo);
+
+
+    List identityList = context.getObjects(Identity.class, qo);
+    System.out.println("Identity List:\n" + identityList);
+
+    // Printing the retrieved identities
+    for (Identity identity : identityList) {
+      System.out.println("Identity: " + identity.getName());
+    }
+
+    return identityList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*========================================================
+  import sailpoint.object.Identity;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.QueryUtil;
+  import sailpoint.validation.*;
+
+  public class MultipleAccountsValidationRule extends GenericValidationRule {
+
+    @Override
+    public ValidationErrors validate(Object obj) {
+      ValidationErrors ve = new ValidationErrors();
+
+      // Query identities with multiple accounts
+      QueryOptions options = new QueryOptions();
+      options.add(Filter.ge("accounts.size", 3)); // Filter identities with more than one account
+      Iterable identities = QueryUtil.findObjects(getContext(), Identity.class, options);
+
+      // Flag identities with multiple accounts
+      for (Identity identity : identities) {
+        ve.add(new ValidationError("Identity '" + identity.getName() + "' has multiple accounts."));
+        // You can take further actions here such as setting flags or sending notifications
+      }
+
+      return ve;
+    }
+  }
+  ======================================================================
+    /*
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import sailpoint.api.IdentityService;
+  import java.util.ArrayList;
+  import java.util.List;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.SailPointFactory;
+  import sailpoint.object.Identity;
+   import java.util.ArrayList;
+
+
+  List identities = context.getObjects(Identity.class);
+  List names=new ArrayList();
+  // System.out.println("names----"+names);
+  for(Identity identity:identities) {
+
+    String name=identity.getName();
+    IdentityService idens=new IdentityService();
+    Link link=idens.getLinks(identity);
+    System.out.println("link--------"+link);
+    System.out.println("name---"+name);
+    names.add(name);
+    //System.out.println("names========"+names);
+
+
+
+  }
+
+
+  /* 
+ // Application application = context.getObjectByName(Application.class,"AD Source Application");
+  Filter f1 = Filter.eq("Application.name","AD Source Application");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f1);
+  List identities1 = context.getObjects(Identity.class);
+  List list1 = new ArrayList();
+  for(Identity id1 : identities1){
+    String names1 = id1.getName();
+    list1.add(names1);
+
+  Filter f2=Filter.eq("Application.name","AD Target Application");
+  QueryOptions qo1 = new QueryOptions();
+  qo1.add(f2);
+  List identities2 = context.getObjects(Identity.class);
+  List list2 = new ArrayList();
+  for(Identity id2 : identities2){
+    String names2 = id2.getName();
+    list2.add(names2);
+  }
+
+/*
+====================================================
+
+  import sailpoint.object.*;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Application;
+  import java.util.List;
+  import java.util.*;
+
+
+  Filter f1=Filter.eq("application.name","AD Target Application");
+
+  System.out.println("f1---------------"+f1);
+   Filter f2=Filter.eq("application.name","LDAP Application");
+
+   System.out.println("f2---------------"+f2);
+
+  Filter filter=f1.and(f2);
+
+   System.out.println("filter---------------"+filter);
+  QueryOptions qo=new QueryOptions();
+  System.out.println("qo---------------"+qo);
+
+  qo.add(filter);
+
+  System.out.println("qo-----"+qo);
+
+   List identities = context.getObjects(Identity.class, qo);
+  System.out.println("identities-----"+identities);
+
+
+====================================================
+//working
+  import sailpoint.object.*;
+  import sailpoint.object.Identity;
+ // Application application = context.getObjectByName(Application.class,"WebService");
+  Filter f1 = Filter.eq("Application.name","WebService");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f1);
+  List identities = context.getObjects(Identity.class);
+  List list1 = new ArrayList();
+  for(Identity id : identities){
+    String names = id.getName();
+    list1.add(names);
+  }
+  return list1;
+
+==========================================
+    import sailpoint.api.SailPointContext;
+import sailpoint.api.SailPointFactory;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.QueryOptions.Op;
+import sailpoint.tools.GeneralException;
+  import java.util.*;
+
+//public class GetIdentitiesFromApplications {
+
+  System.out.println("----------------------");
+
+   // public static void main(String[] args) {
+       // SailPointContext context = null;
+      System.out.println("----------------------"+context+"-------------");
+       // try {
+            // Initialize SailPoint context
+           // context = SailPointFactory.createContext();
+
+            // Specify the application names
+            String application1Name = "AD Source Application";
+            String application2Name = "LDAP Application";
+
+            // Construct query options to filter identities based on application name
+            QueryOptions queryOptions = new QueryOptions();
+            queryOptions.addFilter("applications.name", Op.EQUALS, application1Name);
+            queryOptions.addFilter("applications.name", Op.EQUALS, application2Name);
+            queryOptions.addFilter("inactive", Op.EQUALS, false); // Optionally, filter inactive identities
+
+            // Retrieve identities matching the query options
+            List identities = context.search(Identity.class, queryOptions);
+
+            // Process the retrieved identities
+            for (Identity identity : identities) {
+                // Process each identity as needed
+                System.out.println("Identity: " + identity.getName());
+            }
+        }// catch (GeneralException e) {
+           // e.printStackTrace();
+       // } finally {
+            // Dispose of the SailPoint context to release resources
+           // if (context != null) {
+               // context.close();
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+ /*  List identities1=applicationname.getObjects(Identiy.class);
+  System.out.println("identities1:"+identities1);
+
+ /* 
+  Application a1=context.getObjectByName(Application.class,"AD Target Application");
+  System.out.println("a1---------------"+a1);
+   Application a2=context.getObjectByName(Application.class,"LDAP Application");
+  System.out.println("a2---------------"+a2);*/
+
+  // public String applicationType;
+
+  // Filter filter = Filter.eq("name", applicationType);
+
+  // List of application objects
+  // List applicationsObjectList = context.getObjects(Application.class, new QueryOptions().addFilter(filter));
+  /* List applicationsObjectList = context.getObjects(Application.class);
+
+   List application=applicationsObjectList.name;
+  System.out.println("application---------------"+application);
+
+  System.out.println("applicationsObjectList---------------"+applicationsObjectList);
+
+
+
+
+
+
+
+
+
+ /* IdentityService idser=new IdentityService(context);
+  System.out.println("idser----"+idser);
+
+ Identity identity8=context.getObjectByName(Identity.class,"Aaron nichols");
+  System.out.println("identity8----"+identity8);
+  int count1=idser.countLinks(identity8,context.getObjectByName(Application.class,"AD Target Application"));
+  System.out.println("count1----"+count1);
+
+  List link12=idser.getLinks(context.getObjectByName(Identity.class,"Aaron nichols"),context.getObjectByName(Application.class,"AD Target Application"));
+  System.out.println("link12:-----"+link12);
+
+  return link12;
+
+  System.out.println("--------------------------------------------------");
+
+ Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+  String identityid=identity.getId();
+
+  Identity identity12=identity.getIdentityFromIdOrName(identityId,identity);
+  System.out.println("identity12:-----"+identity12);
+
+  return identity12;
+
+
+
+
+
+
+/*  Application application9= context.getObjectByName(Application.class, "AD Source Application");
+
+
+Link myLink=identity.getLink(application9);
+if(myLink!=null) {
+log.error("xxx here is my link " + myLink);
+} else {
+log.error("xxx i did not get a link);
+          }
+
+
+   List identities=new ArrayList();
+
+  link[] links9=context.getLinks("Aaron Nichols","AD Source Application");
+  System.out.println("links9:-"+links9);
+
+  Application applicationname=context.getObjectByName(Application.class,"AD Target Application");
+  System.out.println("applicationname is:-"+ applicationname);
+
+  Filter filter1=applicationname.getFilter();
+  System.out.println("filter1 is:-"+ filter1);
+
+  QueryOptions queryoptions=new QueryOptions();
+  queryoptions.add(filter1);
+
+  Filter filter=Filter.eq("application.name",applicationname);
+  System.out.println("filter is:-"+ filter);
+
+  List identities1=applicationname.getObjects(Identiy.class);
+  System.out.println("identities1:"+identities1);
+
+
+
+
+  Filter filter=Filter.eq("application.name",applicationname);
+  System.out.println("filter is:-"+ filter);
+
+  QueryOptions queryoptions=new QueryOptions();
+  System.out.println("queryoptions is:-"+ queryoptions);
+  queryoptions.add(filter);
+
+  int count=countObjects(Application.class,queryoptions);
+  System.out.println("count"+count);
+
+
+
+  import sailpoint.object.*;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Application;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+
+ Terminator terminator=new Terminator(context);
+  Filter filter=Filter.eq("identity.name","Aaron Nichols");
+  QueryOptions queryoptions=new QueryOptions();
+  queryoptions.add(filter);
+  terminator.deleteObjects(Link.class,queryoptions);
+
+  ================================================================
+
+import sailpoint.object.*;  
+  import sailpoint.api.*; 
+
+  WorkflowLaunch wfl = new WorkflowLaunch();
+  Workflow wf = context.getObjectByName(Workflow.class,"completeButton");
+  log.error(wf.toXml());
+  if(wf != null){    
+  wfl.setWorkflowName(wf.getName());  
+  wfl.setWorkflowRef(wf.getName());
+  Workflower flower = new Workflower(context);  
+  WorkflowLaunch launch = flower.launch(wfl);
+    log.error(launch.toXml());
+  }  
+ ==========================================================  
+  import sailpoint.object.*;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Application;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+
+ Terminator terminator=new Terminator(context);
+  Filter filter=Filter.eq("application.name","LDAP Application");
+  QueryOptions queryoptions=new QueryOptions();
+  queryoptions.add(filter);
+  terminator.deleteObjects(Link.class,queryoptions);
+
+ ====================================================
+
+ //Working
+  import sailpoint.object.*;
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.api.*;
+  import java.util.Hashmap;
+  import java.util.Map;
+  import java.util.List;
+  import java.util.*;
+
+
+Application applicationname=context.getObjectByName(Application.class,"AD Source Application");
+  System.out.println("application name is:-" + name);
+
+  Identity identity=context.getObjectByName(Identity.class,"Cindy Little") ;
+  System.out.println("Identity is:-" + identity);
+
+   Map map1=identity.getAttributes();
+  System.out.println("map1 is:-" + map1);
+
+   HashMap map=new HashMap(identity.getAttributes());
+  System.out.println("map is:-" + map);
+
+
+  Identity manager=identity.getManager();
+  System.out.println("manager is:-" + manager);
+
+
+  boolean managerstatus=manager.getManagerStatus();
+  System.out.println("managerstatus is:-" + managerstatus);
+
+    List link1=identity.getLinks();
+  System.out.println("link1 is:-" + link1);
+
+  ===========================================================
+
+
+
+  ========================================
+  Link link=identity.getLinks(Link.class,"");
+  System.out.println("link is:-" + link);
+
+   List list=new List(identity.getAttributes());
+  System.out.println("list is:-" + list);
+
+   Identity identity1=applicationname.getObjectById(Identity.class,"") ;
+  System.out.println("identity1 by application is:-" + identity1);
+
+  Identity identities = getIdentitiesByAttribute(attributeName, attributeValue);
+ / System.out.println("Identity is:-" + identities);
+
+  List identity2=applicationname.getObject(Identity.class);
+  System.out.println("identity2 by application is:-" + identity2);
+
+ // Attributes attributes=identity.getAttributes();
+  //System.out.println("attributes is:-"+attributes);
+
+  //String username=identity.getUserName();
+  //System.out.println("username is:-"+username);
+
+
+String email  = name.getAttribute("Email");
+
+  String mail = account.getAttribute("mail");
+  ====================================================
+
+
+   List identities=applicationname.getObjectByName(Identity.class,"");
+  System.out.println("identities is:-"+ identities);
+
+    int count1=identities.count();
+  System.out.println("count1 is:-"+ count1);
+
+  */
+
+
+  ]]></Source>
+        
+
+</Rule>
