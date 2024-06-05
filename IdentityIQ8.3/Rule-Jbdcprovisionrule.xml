@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JBDCProvisionRule" type="JDBCProvision">
+          
+    
+    <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+          
+    
+    <Signature returnType="ProvisioningResult">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+                The application whose data file is being processed.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="schema">
+                                        
+                
+                <Description>
+                The Schema currently in use.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="connection">
+                                        
+                
+                <Description>
+                A connection object to connect to database.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>
+                The ProvisioningPlan created against the JDBC application.
+                </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>
+                A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan
+                </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[System.out.println("JDBC PRovision Rule-----------------------");
+import sailpoint.object.*;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import sailpoint.api.SailPointContext;  
+import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import sailpoint.object.ProvisioningResult;
+ 
+if(plan != null){
+  int groups_id;
+String Firstname;
+String Lastname;
+String Department;
+String EmployeeNo;
+String Email;
+String Name;
+String NetworkID;
+String Manager;
+String user_id;
+  String temp;
+
+List groupName = new ArrayList();
+ 
+  List groupNamesList = new ArrayList();
+ 
+  List groupIdList = new ArrayList();
+ 
+
+List accReqs = plan.getAccountRequests();
+for(int i=0; i<accReqs.size();i++){
+AccountRequest accReq = accReqs.get(i);
+ProvisioningPlan.AccountRequest.Operation op = accReq.getOperation();
+System.out.println("=========CREATE OPERATION=========");
+if(op != null && accReq.getOperation().equals(AccountRequest.Operation.Create)){
+List attReqs = accReq.getAttributeRequests();
+for(int j=0;j<attReqs.size();j++){
+AttributeRequest attReq = attReqs.get(j);
+if(attReq.getName().equalsIgnoreCase("Firstname")){
+Firstname =  attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("Lastname")){
+Lastname = attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("Department")){
+Department= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("EmployeeNo")){
+EmployeeNo= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("Email")){
+Email= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("Name")){
+Name= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("NetworkID")){
+NetworkID= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("Manager")){
+Manager= attReq.getValue();
+}else if(attReq.getName().equalsIgnoreCase("GroupName")){
+Object obj = attReq.getValue();
+             
+              groupNamesList.add(obj);
+              System.out.println("GROUP NAME IS obj " + obj);
+             
+              String grouIdQuery = "SELECT groups_id FROM jdbcpractice.jdbc_groups where GroupName ='" + obj +"'";
+        preparedStatement = connection.prepareStatement(grouIdQuery);
+        resultSet = preparedStatement.executeQuery();
+             
+        if(resultSet.next()) {
+        groupId = resultSet.getInt(1);
+                groupIdList.add(groupId);
+                System.out.println("GROUP ID IS-- " + groupId);
+        }
+if(obj instanceof String){
+temp = attReq.getValue();
+}else if (obj instanceof List){
+groupName = groupName.addAll(attReq.getValue());
+              System.out.println("GROUP NAME IS List " + groupName);
+}
+}
+}
+String users_query = "insert into jdbcpractice.jdbc_users(user_id,Name,Firstname,Lastname,Department,EmployeeNo,Email, NetworkID,manager) values(?,?,?,?,?,?,?,?,?)";
+PreparedStatement users_query_statement = connection.prepareStatement(users_query);
+         
+        String query1 = "SELECT MAX(user_id) FROM jdbcpractice.jdbc_users";
+        preparedStatement = connection.prepareStatement(query1);
+        resultSet = preparedStatement.executeQuery();
+       
+        int maxId = 0;
+        if(resultSet.next()) {
+        maxId = resultSet.getInt(1);
+        }
+int users_Id = maxId + 1;
+        users_query_statement.setInt(1,user_Id);
+        users_query_statement.setString(2,Name);
+users_query_statement.setString(3,Firstname);
+users_query_statement.setString(4,Lastname);
+users_query_statement.setString(5,Department);
+users_query_statement.setString(6,EmployeeNo);
+users_query_statement.setString(7,Email);
+users_query_statement.setString(8,accReq.getNativeIdentity());
+users_query_statement.setString(9,Manager);
+users_query_statement.executeUpdate();
+       
+        System.out.println("GROUP NAMES LIST IS " + groupNamesList);
+        System.out.println("GROUP IDS LIST IS----???????? " + groupIdList);
+       
+        for(int k=0; k<groupNamesList.size();k++){
+          System.out.println("GROUP NAMES LIST FOR LOOP " + k);
+         
+          String users_groups_data_query = "insert into jdbcpractice.jdbc_users_groups(user_id, group_id) values(?,?)";
+        PreparedStatement users_groups_data_query_statement = connection.prepareStatement(users_groups_data_query);
+       
+        users_groups_data_query_statement.setInt(1,user_Id);
+        users_groups_data_query_statement.setInt(2,groupIdList.get(k));
+        users_groups_data_query_statement.executeUpdate();
+         
+        }
+        connection.close();
+}else if(AccountRequest.Operation.Modify.equals(accReq.getOperation())){
+        System.out.println("==========MODIFY OPERATION=======");
+       List attReqs = accReq.getAttributeRequests();
+for(int j=0;j<attReqs.size();j++){
+  String nativeIdentity;
+       
+        List modifyGroupNamesList = new ArrayList();
+ 
+  List modifyGroupIdList = new ArrayList();
+  
+AttributeRequest attReq = attReqs.get(j);
+         
+          nativeIdentity = accReq.getNativeIdentity();
+          System.out.println("NATIVE IDENTITY IS " + nativeIdentity);
+          System.out.println("AttributeRequest IS " + attReq.toXml());
+         
+          if(attReq.getName().equalsIgnoreCase("GroupName")){
+Object obj = attReq.getValue();
+            modifyGroupNamesList.add(obj);
+           
+            System.out.println("GROUP NAME IS obj " + obj);
+            System.out.println("MODIFY GROUP NAMES LIST IS ====" + modifyGroupNamesList);
+           
+            String grouIdQuery = "SELECT groups_id FROM jdbcpractice.jdbc_groups where GroupName ='" + obj +"'";
+        preparedStatement = connection.prepareStatement(grouIdQuery);
+        resultSet = preparedStatement.executeQuery();
+             
+        if(resultSet.next()) {
+        groupId = resultSet.getInt(1);
+              modifyGroupIdList.add(groupId);
+              System.out.println("MODIFY GROUP ID IS-- " + groupId);
+        }
+           
+            String employeeIdQuery = "select users_id from jdbcpractice.jdbc_users where NetworkID ='" + nativeIdentity +"'";
+        preparedStatement = connection.prepareStatement(employeeIdQuery);
+        resultSet = preparedStatement.executeQuery();
+       
+        int user_id;
+        if(resultSet.next()) {
+        user_id = resultSet.getInt(1);
+          System.out.println("MODIFY OPERATION USER ID " + user_id);
+        }
+
+        for(int k=0; k<modifyGroupNamesList.size();k++){
+          System.out.println("MODIFY GROUP NAMES LIST FOR LOOP " + k);
+         
+          String users_groups_data_query = "insert into jdbcpractice.jdbc_users_groups(user_id, group_id) values(?,?)";
+        PreparedStatement users_groups_data_query_statement = connection.prepareStatement(users_groups_data_query);
+       
+        users_groups_data_query_statement.setInt(1,user_id);
+        users_groups_data_query_statement.setInt(2,modifyGroupIdList.get(k));
+        users_groups_data_query_statement.executeUpdate();
+         
+        } 
+          }
+        }
+		connection.close();
+}
+}
+}]]></Source>
+        
+
+</Rule>
